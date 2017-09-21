@@ -1,0 +1,65 @@
+<head>
+<meta charset="utf-8">
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+  crossorigin="anonymous"></script>
+</head>
+<body>
+<h1>Graph Sample</h1>
+<div id="graph" style="width:800px;height:300px;"></div>
+</body>
+
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.5.0/introjs.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.5.0/intro.min.js"></script>
+<script>
+function draw_basic_column_graph(data, categories, graph_ref){
+    var option = {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Graph Title'
+        },
+        xAxis: {
+            categories: categories,
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '人数'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0;font-size:12px">{series.name}: </td>' +
+                '<td style="padding:0;font-size:12px"><b>{point.y:.0f} 人</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        colors: ['#8085e9', '#f45b5b', '#8d4654', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee',
+      '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+        series: data
+    }
+    $(graph_ref).highcharts('Chart', option);
+}
+
+$(document).ready(function(){
+   $.ajax({
+     url: '/graph',
+     type: 'GET'
+     }).done(function (data) {
+        draw_basic_column_graph(
+            data.series, data.categories, '#graph'
+        );
+   })
+});
+</script>
